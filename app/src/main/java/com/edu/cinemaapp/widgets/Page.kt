@@ -17,21 +17,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.edu.cinemaapp.models.FilmModel
 
 @Composable
 fun FilmBanner(
-    text: String,
+    film: FilmModel,
     technology: String,
     pgRating: String,
+    onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier,
         color = Color.Red.copy(alpha = 0.5f),
+        onClick = { onFilmClicked(film) },
     ) {
         Box {
             Text(
-                text = text,
+                text = film.name,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,7 +84,7 @@ private fun Badge(
 private fun FilmBannerPreview() {
     MaterialTheme {
         FilmBanner(
-            text = "lorem ipsum",
+            film = FilmModel(id = 0, name = "Film name"),
             technology = "2D",
             pgRating = "0+",
             modifier = Modifier.fillMaxSize(),

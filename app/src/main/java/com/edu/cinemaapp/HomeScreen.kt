@@ -1,6 +1,5 @@
 package com.edu.cinemaapp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,10 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.edu.cinemaapp.models.FilmModel
 import com.edu.cinemaapp.widgets.FilmBanner
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onFilmClicked: (FilmModel) -> Unit = {},
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -39,6 +41,7 @@ fun HomeScreen() {
             modifier = Modifier.fillMaxSize(),
         ) {
             BannerPager(
+                onFilmClicked = onFilmClicked,
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary)
                     .fillMaxSize()
@@ -57,9 +60,9 @@ fun HomeScreen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BannerPager(
+    onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -68,9 +71,10 @@ fun BannerPager(
         modifier = modifier,
     ) { page ->
         FilmBanner(
-            text = "Page: $page",
+            film = FilmModel(id = page, name = "Film №$page"),
             technology = "2D",
             pgRating = "0+",
+            onFilmClicked = onFilmClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

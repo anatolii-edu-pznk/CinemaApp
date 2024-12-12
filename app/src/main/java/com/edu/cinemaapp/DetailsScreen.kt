@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.edu.cinemaapp.models.FilmModel
 import com.edu.cinemaapp.widgets.FilmBanner
 
 private const val LONG_TEXT = """
@@ -37,7 +38,9 @@ private const val LONG_TEXT = """
     """
 
 @Composable
-fun DetailsScreen() {
+fun DetailsScreen(
+    film: FilmModel,
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -46,7 +49,7 @@ fun DetailsScreen() {
         ) {
             item {
                 FilmBanner(
-                    text = "File name",
+                    film = film,
                     technology = "2D",
                     pgRating = "0+",
                     modifier = Modifier
@@ -198,6 +201,8 @@ fun Description(
 @Composable
 private fun DetailsScreenPreview() {
     MaterialTheme {
-        DetailsScreen()
+        DetailsScreen(
+            film = FilmModel(id = 0, name = "Film name 1"),
+        )
     }
 }
