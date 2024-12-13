@@ -202,7 +202,16 @@ fun Description(
 private fun DetailsScreenPreview() {
     MaterialTheme {
         DetailsScreen(
-            film = FilmModel(id = 0, name = "Film name 1"),
+            film = FilmModel(
+                name = "Film name",
+                nameUa = "Film name",
+                bannerImage = "https://picsum.photos/200/300",
+                country = "USA",
+                duration = "1h 30m",
+                year = 2024,
+                language = "English",
+                description = "Description",
+            )
         )
     }
 }

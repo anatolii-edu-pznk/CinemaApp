@@ -71,7 +71,7 @@ fun BannerPager(
         modifier = modifier,
     ) { page ->
         FilmBanner(
-            film = FilmModel(id = page, name = "Film №$page"),
+            film = FilmModel(name = "Film №$page"),
             technology = "2D",
             pgRating = "0+",
             onFilmClicked = onFilmClicked,

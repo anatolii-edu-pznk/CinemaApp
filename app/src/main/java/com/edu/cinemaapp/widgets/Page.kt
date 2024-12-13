@@ -84,7 +84,7 @@ private fun Badge(
 private fun FilmBannerPreview() {
     MaterialTheme {
         FilmBanner(
-            film = FilmModel(id = 0, name = "Film name"),
+            film = FilmModel(name = "Film name"),
             technology = "2D",
             pgRating = "0+",
             modifier = Modifier.fillMaxSize(),

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,11 @@ class MainActivity : ComponentActivity() {
         Log.d("MainActivity", "onCreate")
         setContent {
             App()
+
+            LaunchedEffect(Unit) {
+                val films = RetrofitProvider.apiService.getReleasedFilms()
+                Log.d("MainActivity", "films: $films")
+            }
         }
     }
 }

@@ -1,9 +1,19 @@
 package com.edu.cinemaapp.models
 
+
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FilmModel(
-    val id: Int,
-    val name: String,
+    val name: String = "",
+    @SerializedName("name_ua")
+    val nameUa: String = "",
+    @SerializedName("banner_image")
+    val bannerImage: String = "",
+    val country: String = "",
+    val duration: String = "",
+    val year: Int = 2002,
+    val language: String = "",
+    val description: String = "",
 )
