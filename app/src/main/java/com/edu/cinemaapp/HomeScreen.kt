@@ -1,6 +1,5 @@
 package com.edu.cinemaapp
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
@@ -23,15 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.edu.cinemaapp.models.FilmModel
 import com.edu.cinemaapp.widgets.FilmBanner
 
 @Composable
 fun HomeScreen(
+    state: HomeState,
     onFilmClicked: (FilmModel) -> Unit = {},
 ) {
     Surface(
@@ -41,9 +42,9 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             BannerPager(
+                state = state,
                 onFilmClicked = onFilmClicked,
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary)
                     .fillMaxSize()
                     .weight(0.7f),
             )
@@ -52,6 +53,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             UpcomingLazyList(
+                state = state,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.3f)
@@ -62,16 +64,17 @@ fun HomeScreen(
 
 @Composable
 fun BannerPager(
+    state: HomeState,
     onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { state.releasedFilms.size })
     HorizontalPager(
         state = pagerState,
         modifier = modifier,
     ) { page ->
         FilmBanner(
-            film = FilmModel(name = "Film №$page"),
+            film = state.releasedFilms[page],
             technology = "2D",
             pgRating = "0+",
             onFilmClicked = onFilmClicked,
@@ -82,16 +85,16 @@ fun BannerPager(
 
 @Composable
 fun UpcomingLazyList(
+    state: HomeState,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
         contentPadding = PaddingValues(top = 16.dp, start = 16.dp, bottom = 8.dp, end = 8.dp),
-
         modifier = modifier
-            .background(Color.Yellow.copy(alpha = 0.5f)),
     ) {
-        items(10) {
+        items(state.upcomingFilms) { film ->
             FilmCard(
+                film = film,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .width(width = 164.dp)
@@ -102,21 +105,22 @@ fun UpcomingLazyList(
 }
 
 @Composable
-fun FilmCard(
+private fun FilmCard(
+    film: FilmModel,
     modifier: Modifier,
 ) {
     Card(
         modifier = modifier,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = "Film poster",
-                contentScale = ContentScale.FillHeight,
+            AsyncImage(
+                model = film.bannerImage,
+                contentDescription = film.description,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxSize(),
             )
             Text(
-                text = "Film info",
+                text = film.nameUa,
                 color = Color.Black,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -134,6 +138,6 @@ fun FilmCard(
 @Composable
 private fun HomeScreenPreview() {
     MaterialTheme {
-        HomeScreen()
+        HomeScreen(state = HomeState())
     }
 }
