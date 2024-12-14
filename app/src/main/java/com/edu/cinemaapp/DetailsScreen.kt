@@ -23,20 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.edu.cinemaapp.models.FilmModel
 import com.edu.cinemaapp.widgets.FilmBanner
 
-private const val LONG_TEXT = """
-    lorem ipsum long text
-    lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    lorem ipsum long text lorem ipsum long text
-    """
-
 @Composable
 fun DetailsScreen(
     film: FilmModel,
@@ -50,8 +36,8 @@ fun DetailsScreen(
             item {
                 FilmBanner(
                     film = film,
-                    technology = "2D",
-                    pgRating = "0+",
+                    technology = film.technology,
+                    pgRating = film.pgRating,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(ratio = 0.75f),
@@ -59,8 +45,8 @@ fun DetailsScreen(
             }
             item {
                 Header(
-                    title = "Title",
-                    subTitle = "Subtitle",
+                    title = film.nameUa,
+                    subTitle = "(${film.name})",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 24.dp),
@@ -68,9 +54,9 @@ fun DetailsScreen(
             }
             item {
                 SubHeader(
-                    country = "Country",
-                    duration = "1h 30m",
-                    year = "2024",
+                    country = film.country,
+                    duration = film.duration,
+                    year = "${film.year}",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 23.dp),
@@ -92,7 +78,7 @@ fun DetailsScreen(
             item {
                 Description(
                     title = "Description",
-                    text = LONG_TEXT,
+                    text = film.description,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)

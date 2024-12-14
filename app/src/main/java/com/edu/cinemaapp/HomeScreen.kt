@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,6 +55,7 @@ fun HomeScreen(
             )
             UpcomingLazyList(
                 state = state,
+                onFilmClicked = onFilmClicked,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.3f)
@@ -75,8 +77,8 @@ fun BannerPager(
     ) { page ->
         FilmBanner(
             film = state.releasedFilms[page],
-            technology = "2D",
-            pgRating = "0+",
+            technology = state.releasedFilms[page].technology,
+            pgRating = state.releasedFilms[page].pgRating,
             onFilmClicked = onFilmClicked,
             modifier = Modifier.fillMaxSize(),
         )
@@ -86,6 +88,7 @@ fun BannerPager(
 @Composable
 fun UpcomingLazyList(
     state: HomeState,
+    onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
@@ -95,6 +98,7 @@ fun UpcomingLazyList(
         items(state.upcomingFilms) { film ->
             FilmCard(
                 film = film,
+                onFilmClicked = onFilmClicked,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .width(width = 164.dp)
@@ -104,12 +108,15 @@ fun UpcomingLazyList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FilmCard(
     film: FilmModel,
+    onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier,
 ) {
     Card(
+        onClick = { onFilmClicked(film) },
         modifier = modifier,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
