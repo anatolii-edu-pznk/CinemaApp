@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +35,7 @@ import coil3.compose.AsyncImage
 import com.edu.cinemaapp.models.FilmModel
 import com.edu.cinemaapp.ui.theme.primaryText
 import com.edu.cinemaapp.widgets.FilmBanner
+import com.edu.cinemaapp.widgets.ShimmerEffect
 
 @Composable
 fun HomeScreen(
@@ -80,17 +82,23 @@ fun BannerPager(
     onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState(pageCount = { state.releasedFilms.size })
-    HorizontalPager(
-        state = pagerState,
-        modifier = modifier,
-    ) { page ->
-        FilmBanner(
-            film = state.releasedFilms[page],
-            technology = state.releasedFilms[page].technology,
-            pgRating = state.releasedFilms[page].pgRating,
-            onFilmClicked = onFilmClicked,
-            modifier = Modifier.fillMaxSize(),
+    if (state.releasedFilms.isNotEmpty()) {
+        val pagerState = rememberPagerState(pageCount = { state.releasedFilms.size })
+        HorizontalPager(
+            state = pagerState,
+            modifier = modifier,
+        ) { page ->
+            FilmBanner(
+                film = state.releasedFilms[page],
+                technology = state.releasedFilms[page].technology,
+                pgRating = state.releasedFilms[page].pgRating,
+                onFilmClicked = onFilmClicked,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    } else {
+        ShimmerEffect(
+            modifier = modifier.background(Color.LightGray),
         )
     }
 }
@@ -101,19 +109,37 @@ fun UpcomingLazyList(
     onFilmClicked: (FilmModel) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    LazyRow(
-        contentPadding = PaddingValues(start = 16.dp, bottom = 8.dp, end = 8.dp),
-        modifier = modifier
-    ) {
-        items(state.upcomingFilms) { film ->
-            FilmCard(
-                film = film,
-                onFilmClicked = onFilmClicked,
-                modifier = Modifier
-                    .padding(end = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(ratio = 0.67f),
-            )
+    if (state.upcomingFilms.isNotEmpty()) {
+        LazyRow(
+            contentPadding = PaddingValues(start = 16.dp, bottom = 8.dp, end = 8.dp),
+            modifier = modifier
+        ) {
+            items(state.upcomingFilms) { film ->
+                FilmCard(
+                    film = film,
+                    onFilmClicked = onFilmClicked,
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .fillMaxHeight()
+                        .aspectRatio(ratio = 0.67f),
+                )
+            }
+        }
+    } else {
+        LazyRow(
+            contentPadding = PaddingValues(start = 16.dp, bottom = 8.dp, end = 8.dp),
+            modifier = modifier
+        ) {
+            items(count = 5) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .clip(shape = MaterialTheme.shapes.extraSmall)
+                        .background(Color.LightGray)
+                        .fillMaxHeight()
+                        .aspectRatio(ratio = 0.67f),
+                )
+            }
         }
     }
 }
