@@ -4,17 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,11 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.edu.cinemaapp.models.FilmModel
+import com.edu.cinemaapp.ui.theme.primaryText
 import com.edu.cinemaapp.widgets.FilmBanner
 
 @Composable
@@ -51,7 +55,12 @@ fun HomeScreen(
             )
             Text(
                 text = "Soon in cinemas",
-                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primaryText,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 16.dp),
             )
             UpcomingLazyList(
                 state = state,
@@ -59,6 +68,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.3f)
+                    .navigationBarsPadding()
             )
         }
     }
@@ -92,7 +102,7 @@ fun UpcomingLazyList(
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
-        contentPadding = PaddingValues(top = 16.dp, start = 16.dp, bottom = 8.dp, end = 8.dp),
+        contentPadding = PaddingValues(start = 16.dp, bottom = 8.dp, end = 8.dp),
         modifier = modifier
     ) {
         items(state.upcomingFilms) { film ->
@@ -101,8 +111,8 @@ fun UpcomingLazyList(
                 onFilmClicked = onFilmClicked,
                 modifier = Modifier
                     .padding(end = 12.dp)
-                    .width(width = 164.dp)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .aspectRatio(ratio = 0.67f),
             )
         }
     }
@@ -117,6 +127,8 @@ private fun FilmCard(
 ) {
     Card(
         onClick = { onFilmClicked(film) },
+        shape = MaterialTheme.shapes.extraSmall,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -126,17 +138,24 @@ private fun FilmCard(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxSize(),
             )
-            Text(
-                text = film.nameUa,
-                color = Color.Black,
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(33.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary
-                    ),
-            )
+                    .align(Alignment.BottomCenter)
+                    .background(color = MaterialTheme.colorScheme.primary),
+            ) {
+                Text(
+                    text = film.nameUa,
+                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Light,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
