@@ -47,7 +47,8 @@ private fun App() {
                     state = state,
                     onFilmClicked = { film ->
                         navController.navigate(route = film)
-                    }
+                    },
+                    onRefresh = { viewModel.load() },
                 )
             }
             composable<FilmModel> { backStackEntry ->

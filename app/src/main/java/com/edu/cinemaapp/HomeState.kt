@@ -5,4 +5,5 @@ import com.edu.cinemaapp.models.FilmModel
 data class HomeState(
     val releasedFilms: List<FilmModel> = emptyList(),
     val upcomingFilms: List<FilmModel> = emptyList(),
+    val isRefreshing: Boolean = false,
 )

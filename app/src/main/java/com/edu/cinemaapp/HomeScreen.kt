@@ -4,22 +4,30 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,41 +45,52 @@ import com.edu.cinemaapp.ui.theme.primaryText
 import com.edu.cinemaapp.widgets.FilmBanner
 import com.edu.cinemaapp.widgets.ShimmerEffect
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     state: HomeState,
     onFilmClicked: (FilmModel) -> Unit = {},
+    onRefresh: () -> Unit = {},
 ) {
-    Surface(
+    PullToRefreshBox(
+        state = rememberPullToRefreshState(),
+        isRefreshing = state.isRefreshing,
+        onRefresh = onRefresh,
         modifier = Modifier.fillMaxSize(),
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
         ) {
-            BannerPager(
-                state = state,
-                onFilmClicked = onFilmClicked,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.7f),
-            )
-            Text(
-                text = "Soon in cinemas",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primaryText,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 16.dp),
-            )
-            UpcomingLazyList(
-                state = state,
-                onFilmClicked = onFilmClicked,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.3f)
-                    .navigationBarsPadding()
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                BannerPager(
+                    state = state,
+                    onFilmClicked = onFilmClicked,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.7f),
+                )
+                Text(
+                    text = "Soon in cinemas",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primaryText,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp),
+                )
+                UpcomingLazyList(
+                    state = state,
+                    onFilmClicked = onFilmClicked,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.3f)
+                        .navigationBarsPadding()
+                )
+            }
         }
     }
 }
@@ -84,22 +103,56 @@ fun BannerPager(
 ) {
     if (state.releasedFilms.isNotEmpty()) {
         val pagerState = rememberPagerState(pageCount = { state.releasedFilms.size })
-        HorizontalPager(
-            state = pagerState,
-            modifier = modifier,
-        ) { page ->
-            FilmBanner(
-                film = state.releasedFilms[page],
-                technology = state.releasedFilms[page].technology,
-                pgRating = state.releasedFilms[page].pgRating,
-                onFilmClicked = onFilmClicked,
+        Box(modifier = modifier) {
+            HorizontalPager(
+                state = pagerState,
                 modifier = Modifier.fillMaxSize(),
+            ) { page ->
+                FilmBanner(
+                    film = state.releasedFilms[page],
+                    technology = state.releasedFilms[page].technology,
+                    pgRating = state.releasedFilms[page].pgRating,
+                    onFilmClicked = onFilmClicked,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+            PagerIndicatorRow(
+                pagerState = pagerState,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
             )
         }
     } else {
         ShimmerEffect(
             modifier = modifier.background(Color.LightGray),
         )
+    }
+}
+
+@Composable
+private fun PagerIndicatorRow(
+    pagerState: PagerState,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        repeat(pagerState.pageCount) { page ->
+            val color = MaterialTheme.colorScheme.primary.copy(
+                alpha = if (pagerState.currentPage == page) 1f else 0.5f
+            )
+            val size = if (pagerState.currentPage == page) 16.dp else 12.dp
+            Box(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(size = size)
+                    .clip(CircleShape)
+                    .background(color = color),
+            )
+        }
     }
 }
 
@@ -144,7 +197,6 @@ fun UpcomingLazyList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FilmCard(
     film: FilmModel,
