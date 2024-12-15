@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CinemaApp</string>
+    <string name="hm_upcoming_films_title">Upcoming</string>
+    <string name="dt_country_title">Country</string>
+    <string name="dt_duration">Duration</string>
+    <string name="dt_year">Year</string>
+    <string name="dt_choose_film">Choose film</string>
+</resources>

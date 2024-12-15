@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CinemaApp</string>
+    <string name="hm_upcoming_films_title">Скоро в прокаті</string>
+    <string name="dt_country_title">Країна</string>
+    <string name="dt_duration">Тривалість</string>
+    <string name="dt_year">Рік</string>
+    <string name="dt_choose_film">Обрати сеанс</string>
 </resources>

@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,7 +122,7 @@ fun DetailsScreen(
                         .padding(horizontal = 16.dp),
                 ) {
                     Text(
-                        text = "Choose time",
+                        text = stringResource(R.string.dt_choose_film),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primaryText,
                     )
@@ -172,15 +173,15 @@ private fun SubHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         SubHeaderItem(
-            title = "Country",
+            title = stringResource(R.string.dt_country_title),
             text = country,
         )
         SubHeaderItem(
-            title = "Duration",
+            title = stringResource(R.string.dt_duration),
             text = duration,
         )
         SubHeaderItem(
-            title = "Year",
+            title = stringResource(R.string.dt_year),
             text = year,
         )
     }
